@@ -1,6 +1,5 @@
 param(
     [string]$Database,
-    [string]$User,
     [string]$Server,
     [int]$Port
 )
@@ -9,7 +8,8 @@ $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 & (Join-Path $projectRoot 'carregar-env.ps1') -Path (Join-Path $projectRoot '.env')
 
 if (-not $Database) { $Database = if ($env:PGDATABASE) { $env:PGDATABASE } else { 'mensageria_object_store' } }
-if (-not $User) { $User = if ($env:PGUSER) { $env:PGUSER } else { 'postgres' } }
+$User = $env:PGUSER
+if (-not $User) { throw 'PGUSER não foi definido. Configure o usuário do seu PostgreSQL no arquivo .env.' }
 if (-not $Server) { $Server = if ($env:PGHOST) { $env:PGHOST } else { 'localhost' } }
 if (-not $Port) { $Port = if ($env:PGPORT) { [int]$env:PGPORT } else { 5432 } }
 if ($Database -notmatch '^[a-zA-Z][a-zA-Z0-9_]*$') { throw 'Nome de banco inválido.' }

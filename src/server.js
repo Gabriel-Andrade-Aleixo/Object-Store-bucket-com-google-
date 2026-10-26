@@ -5,6 +5,7 @@ const database = require('./database/database');
 
 async function main() {
   if (!fs.existsSync(config.credentialsPath)) throw new Error(`Credencial não encontrada: ${config.credentialsPath}`);
+  if (!config.postgres.user) throw new Error('PGUSER não foi definido no arquivo .env.');
   await database.initDatabase();
   const server = app.listen(config.port, () => {
     console.log(`Catálogo disponível em http://localhost:${config.port}`);

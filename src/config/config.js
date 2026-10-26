@@ -15,7 +15,7 @@ module.exports = {
     host: process.env.PGHOST || 'localhost',
     port: Number(process.env.PGPORT || 5432),
     database: process.env.PGDATABASE || 'mensageria_object_store',
-    user: process.env.PGUSER || 'postgres',
+    user: process.env.PGUSER,
     password: process.env.PGPASSWORD || undefined,
     max: 10,
     idleTimeoutMillis: 30000,
