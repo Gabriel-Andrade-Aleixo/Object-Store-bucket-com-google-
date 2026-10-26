@@ -43,7 +43,7 @@ Fluxo: `Navegador -> Route -> Controller -> Service -> Model/PostgreSQL`, com o 
 .\configurar-banco.ps1
 ```
 
-3. Se a senha não estiver no `pgpass.conf`, informe-a quando solicitada. Para a aplicação, você também pode defini-la somente na sessão atual:
+3. Se a autenticação salva não funcionar, o script solicitará a senha do usuário `postgres` de forma oculta. Ela será usada somente no processo atual. Você também pode defini-la previamente na sessão:
 
 ```powershell
 $env:PGPASSWORD='sua_senha_local'
