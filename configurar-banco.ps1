@@ -6,11 +6,11 @@ param(
 )
 $ErrorActionPreference='Stop'
 if ($Database -notmatch '^[a-zA-Z][a-zA-Z0-9_]*$') { throw 'Nome de banco inválido.' }
+$projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+& (Join-Path $projectRoot 'iniciar-postgres.ps1')
 $pgBin='C:\Program Files\PostgreSQL\18\bin'
 $ready=Join-Path $pgBin 'pg_isready.exe';$psql=Join-Path $pgBin 'psql.exe';$createdb=Join-Path $pgBin 'createdb.exe'
 if (-not (Test-Path -LiteralPath $psql)) { throw 'PostgreSQL 18 não encontrado.' }
-& $ready -h $Server -p $Port
-if ($LASTEXITCODE -ne 0) { throw 'O PostgreSQL não está ativo na porta 5432. Inicie o serviço e tente novamente.' }
 $exists=& $psql -w -h $Server -p $Port -U $User -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$Database'" 2>$null
 if ($LASTEXITCODE -ne 0) {
     $secure=Read-Host 'Senha local do usuário postgres' -AsSecureString

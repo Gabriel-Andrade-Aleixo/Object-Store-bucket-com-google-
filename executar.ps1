@@ -5,6 +5,7 @@ $env:GOOGLE_APPLICATION_CREDENTIALS=$credencial;$env:BUCKET_NAME='fatec-2026-gru
 if(-not $env:PGHOST){$env:PGHOST='localhost'};if(-not $env:PGPORT){$env:PGPORT='5432'};if(-not $env:PGDATABASE){$env:PGDATABASE='mensageria_object_store'};if(-not $env:PGUSER){$env:PGUSER='postgres'}
 $psql='C:\Program Files\PostgreSQL\18\bin\psql.exe'
 if(-not $VerificarBucket -and (Test-Path -LiteralPath $psql)){
+    & (Join-Path $PSScriptRoot 'iniciar-postgres.ps1')
     & $psql -w -h $env:PGHOST -p $env:PGPORT -U $env:PGUSER -d postgres -tAc 'SELECT 1' *> $null
     if($LASTEXITCODE -ne 0){
         $secure=Read-Host 'Senha local do usuário postgres' -AsSecureString

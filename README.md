@@ -43,6 +43,8 @@ Fluxo: `Navegador -> Route -> Controller -> Service -> Model/PostgreSQL`, com o 
 .\configurar-banco.ps1
 ```
 
+Se o serviço do Windows estiver parado, o script tentará iniciar o PostgreSQL diretamente pelo `pg_ctl`.
+
 3. Se a autenticação salva não funcionar, o script solicitará a senha do usuário `postgres` de forma oculta. Ela será usada somente no processo atual. Você também pode defini-la previamente na sessão:
 
 ```powershell
