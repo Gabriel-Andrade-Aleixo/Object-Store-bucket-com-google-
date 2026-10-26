@@ -2,6 +2,11 @@ const productModel = require('../models/productModel');
 const imageModel = require('../models/imageModel');
 const storageService = require('./storageService');
 
+const lowercaseConnectors = new Set([
+  'a', 'as', 'com', 'da', 'das', 'de', 'do', 'dos', 'e', 'em', 'na', 'nas',
+  'no', 'nos', 'o', 'os', 'para', 'por',
+]);
+
 function appError(message, status = 400) {
   const error = new Error(message);
   error.status = status;
@@ -14,8 +19,27 @@ function parsePrice(value) {
   return Number(normalized).toFixed(2);
 }
 
+function normalizeProductName(value) {
+  const normalized = String(value ?? '')
+    .normalize('NFC')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLocaleLowerCase('pt-BR');
+
+  return normalized.split(' ').map((word, index) => {
+    if (index > 0 && lowercaseConnectors.has(word)) return word;
+
+    return word.split('-').map((part) => {
+      if (/^\d+[a-z]+$/iu.test(part)) return part.toLocaleUpperCase('pt-BR');
+      return part
+        ? part.charAt(0).toLocaleUpperCase('pt-BR') + part.slice(1)
+        : part;
+    }).join('-');
+  }).join(' ');
+}
+
 async function createProduct(input) {
-  const name = String(input.name ?? '').trim();
+  const name = normalizeProductName(input.name);
   const description = String(input.description ?? '').trim();
   if (name.length < 2 || name.length > 120) throw appError('O nome deve ter entre 2 e 120 caracteres.');
   if (description.length < 5 || description.length > 2000) throw appError('A descrição deve ter entre 5 e 2000 caracteres.');
@@ -23,6 +47,19 @@ async function createProduct(input) {
 }
 
 async function listProducts() { return productModel.findAll(); }
+
+async function normalizeStoredProductNames() {
+  const products = await productModel.findAll();
+  let updated = 0;
+  for (const product of products) {
+    const normalizedName = normalizeProductName(product.name);
+    if (normalizedName && normalizedName !== product.name) {
+      await productModel.updateName(product.id, normalizedName);
+      updated += 1;
+    }
+  }
+  return updated;
+}
 
 async function getProduct(productId) {
   const product = await productModel.findById(productId);
@@ -82,4 +119,15 @@ async function getImage(productId, imageId) {
   return image;
 }
 
-module.exports = { createProduct, listProducts, getProduct, uploadImages, setPrimaryImage, deleteImage, getImage, parsePrice };
+module.exports = {
+  createProduct,
+  listProducts,
+  getProduct,
+  uploadImages,
+  setPrimaryImage,
+  deleteImage,
+  getImage,
+  parsePrice,
+  normalizeProductName,
+  normalizeStoredProductNames,
+};

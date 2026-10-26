@@ -38,4 +38,14 @@ async function findByName(name) {
   return mapProduct(rows[0]);
 }
 
-module.exports = { create, findAll, findById, findByName };
+async function updateName(id, name) {
+  const { rows } = await db.query(`
+    UPDATE products
+    SET name = $2, updated_at = NOW()
+    WHERE id = $1
+    RETURNING *
+  `, [id, name]);
+  return mapProduct(rows[0]);
+}
+
+module.exports = { create, findAll, findById, findByName, updateName };

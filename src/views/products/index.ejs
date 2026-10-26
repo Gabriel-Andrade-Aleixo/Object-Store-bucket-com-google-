@@ -1,5 +1,50 @@
 <%- include('../partials/header', { title: 'Produtos' }) %>
-<section class="hero"><div><span class="eyebrow">Object Store</span><h1>Catálogo de produtos</h1><p>Dados no PostgreSQL local e imagens públicas no bucket do grupo C.</p></div><a class="button primary" href="/products/new">Cadastrar produto</a></section>
-<% if (!products.length) { %><section class="empty"><h2>Nenhum produto cadastrado</h2><p>Cadastre manualmente ou execute a carga de demonstração.</p></section><% } else { %>
-<section class="catalog-grid"><% products.forEach((product) => { %><article class="card"><a class="card-image" href="/products/<%= product.id %>"><% if (product.primary_image_url) { %><img src="<%= product.primary_image_url %>" alt="Capa de <%= product.name %>"><% } else { %><span>Sem imagem</span><% } %></a><div class="card-content"><small><%= product.image_count %> imagem(ns)</small><h2><a href="/products/<%= product.id %>"><%= product.name %></a></h2><p><%= product.description %></p><div class="card-footer"><strong><%= currency(product.price) %></strong><a href="/products/<%= product.id %>">Ver detalhes →</a></div></div></article><% }) %></section><% } %>
+
+<section class="hero catalog-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">Object Store</span>
+    <h1>Catálogo de produtos</h1>
+    <p>Produtos no PostgreSQL e imagens públicas armazenadas no bucket do grupo C.</p>
+  </div>
+  <a class="button primary" href="/products/new">+ Cadastrar produto</a>
+</section>
+
+<% if (!products.length) { %>
+  <section class="empty">
+    <div class="empty-symbol">◇</div>
+    <h2>Nenhum produto cadastrado</h2>
+    <p>Cadastre manualmente ou execute a carga de demonstração.</p>
+    <a class="button primary" href="/products/new">Criar primeiro produto</a>
+  </section>
+<% } else { %>
+  <section class="catalog-heading">
+    <div><span class="eyebrow">Vitrine</span><h2><%= products.length %> produto<%= products.length === 1 ? '' : 's' %></h2></div>
+    <p>Selecione um item para visualizar sua galeria completa.</p>
+  </section>
+
+  <section class="catalog-grid">
+    <% products.forEach((product) => { %>
+      <article class="product-card">
+        <a class="card-image" href="/products/<%= product.id %>" aria-label="Abrir <%= product.name %>">
+          <% if (product.primary_image_url) { %>
+            <img loading="lazy" src="<%= product.primary_image_url %>" alt="Capa de <%= product.name %>">
+          <% } else { %>
+            <span class="image-placeholder">Sem imagem</span>
+          <% } %>
+          <span class="image-count"><%= product.image_count %> <%= product.image_count === 1 ? 'imagem' : 'imagens' %></span>
+        </a>
+        <div class="card-content">
+          <span class="card-kicker">Produto</span>
+          <h2 class="card-title"><a href="/products/<%= product.id %>"><%= product.name %></a></h2>
+          <p class="card-description"><%= product.description %></p>
+          <div class="card-footer">
+            <strong class="card-price"><%= currency(product.price) %></strong>
+            <a class="detail-link" href="/products/<%= product.id %>">Ver detalhes <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </article>
+    <% }) %>
+  </section>
+<% } %>
+
 <%- include('../partials/footer') %>

@@ -28,6 +28,7 @@ Fluxo: `Navegador -> Route -> Controller -> Service -> Model/PostgreSQL`, com o 
 ## Funcionalidades
 
 - cadastro de produto com nome, descrição e preço;
+- padronização automática dos nomes em formato de título, inclusive para registros antigos;
 - várias imagens por produto e definição da capa;
 - catálogo com miniatura pública;
 - detalhe com galeria;
