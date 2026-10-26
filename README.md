@@ -51,6 +51,8 @@ Se o serviço do Windows estiver parado, o script tentará iniciar o PostgreSQL 
 $env:PGPASSWORD='sua_senha_local'
 ```
 
+Os scripts e a aplicação também carregam automaticamente o arquivo `.env`. Assim, `PGUSER`, `PGPASSWORD`, `PGDATABASE`, `PGHOST` e `PGPORT` podem ser configurados apenas nesse arquivo local, que está ignorado pelo Git.
+
 4. Inicie a aplicação:
 
 ```powershell

@@ -1,7 +1,8 @@
 param([switch]$Seed,[switch]$VerificarBucket)
 $ErrorActionPreference='Stop';Set-Location -LiteralPath $PSScriptRoot
+& (Join-Path $PSScriptRoot 'carregar-env.ps1') -Path (Join-Path $PSScriptRoot '.env')
 $credencial=Join-Path $PSScriptRoot 'sa-grupo-c-key.json';if(-not(Test-Path -LiteralPath $credencial)){throw "Credencial não encontrada: $credencial"}
-$env:GOOGLE_APPLICATION_CREDENTIALS=$credencial;$env:BUCKET_NAME='fatec-2026-grupo-c'
+if(-not $env:GOOGLE_APPLICATION_CREDENTIALS){$env:GOOGLE_APPLICATION_CREDENTIALS=$credencial};if(-not $env:BUCKET_NAME){$env:BUCKET_NAME='fatec-2026-grupo-c'}
 if(-not $env:PGHOST){$env:PGHOST='localhost'};if(-not $env:PGPORT){$env:PGPORT='5432'};if(-not $env:PGDATABASE){$env:PGDATABASE='mensageria_object_store'};if(-not $env:PGUSER){$env:PGUSER='postgres'}
 $psql='C:\Program Files\PostgreSQL\18\bin\psql.exe'
 if(-not $VerificarBucket -and (Test-Path -LiteralPath $psql)){
