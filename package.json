@@ -1,0 +1,23 @@
+{
+  "name": "fatec-object-store-grupo-c",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Catálogo Node.js com PostgreSQL local e Google Cloud Storage.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node scripts/seed.js",
+    "bucket:check": "node scripts/checkBucket.js",
+    "test": "node --test",
+    "check": "node --check src/server.js && node --check scripts/seed.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@google-cloud/storage": "^7.16.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "pg": "^8.13.1"
+  }
+}
