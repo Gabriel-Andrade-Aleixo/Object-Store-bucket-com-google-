@@ -1,9 +1,20 @@
+/**
+ * Ponto de entrada da aplicação.
+ *
+ * Valida credenciais, cria o schema inicial do banco, padroniza nomes antigos
+ * de produtos e inicia o servidor HTTP.
+ */
 const fs = require('node:fs');
 const app = require('./app');
 const config = require('./config/config');
 const database = require('./database/database');
 const productService = require('./services/productService');
 
+/**
+ * Inicializa a aplicação e prepara o ambiente de execução.
+ *
+ * @returns {Promise<void>}
+ */
 async function main() {
   if (!fs.existsSync(config.credentialsPath)) throw new Error(`Credencial não encontrada: ${config.credentialsPath}`);
   if (!config.postgres.user) throw new Error('PGUSER não foi definido no arquivo .env.');

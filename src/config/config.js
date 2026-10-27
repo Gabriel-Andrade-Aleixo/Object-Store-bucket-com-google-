@@ -1,3 +1,9 @@
+/**
+ * Configuração central da aplicação.
+ *
+ * Centraliza a leitura de variáveis de ambiente, a localização do projeto e as
+ * configurações de conexão com o bucket do Google Cloud Storage e o PostgreSQL.
+ */
 const path = require('node:path');
 const dotenv = require('dotenv');
 

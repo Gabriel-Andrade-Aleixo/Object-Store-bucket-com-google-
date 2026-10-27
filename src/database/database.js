@@ -1,3 +1,9 @@
+/**
+ * Módulo de acesso ao PostgreSQL.
+ *
+ * Responsável por criar as tabelas iniciais, expor o pool da aplicação e
+ * encapsular operações transacionais para garantir integridade de dados.
+ */
 const { Pool } = require('pg');
 const config = require('../config/config');
 
@@ -7,6 +13,12 @@ pool.on('error', (error) => {
   console.error('Erro inesperado na conexão PostgreSQL:', error.message);
 });
 
+/**
+ * Inicializa o schema do banco com as tabelas e índices necessários
+ * para produtos e imagens associadas.
+ *
+ * @returns {Promise<void>}
+ */
 async function initDatabase() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS products (
@@ -38,6 +50,12 @@ async function initDatabase() {
   `);
 }
 
+/**
+ * Executa uma transação de banco com rollback automático em caso de falha.
+ *
+ * @param {Function} callback - Função que recebe o cliente do PostgreSQL.
+ * @returns {Promise<any>} Resultado retornado pelo callback.
+ */
 async function transaction(callback) {
   const client = await pool.connect();
   try {
