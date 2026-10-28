@@ -10,6 +10,7 @@ const multer = require('multer');
 const config = require('./config/config');
 const productRoutes = require('./routes/productRoutes');
 const storageRoutes = require('./routes/storageRoutes');
+const healthRoutes = require('./routes/healthRoutes');
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -31,6 +32,7 @@ app.locals.dateTime = (value) => value ? new Intl.DateTimeFormat('pt-BR', { date
 app.locals.fileSize = (bytes) => bytes < 1024 ? `${bytes} B` : bytes < 1048576 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1048576).toFixed(1)} MB`;
 
 app.get('/', (_request, response) => response.redirect('/products'));
+app.use('/health', healthRoutes);
 app.use('/products', productRoutes);
 app.use('/storage', storageRoutes);
 app.use((_request, response) => response.status(404).render('error', { status: 404, message: 'Página não encontrada.' }));
