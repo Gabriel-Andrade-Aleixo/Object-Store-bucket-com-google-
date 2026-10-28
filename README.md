@@ -1,4 +1,5 @@
 # Projeto Object Store - Grupo C
+### Integrantes: Uriel, Gabriel Aleixo, Dimerson e Vitor
 
 Aplicação de e-commerce em JavaScript/Node.js. Produtos e metadados das imagens ficam no PostgreSQL local; somente os arquivos de imagem ficam no bucket público `fatec-2026-grupo-c`.
 
