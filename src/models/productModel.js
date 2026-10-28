@@ -35,19 +35,31 @@ async function create({ name, description, price }) {
 }
 
 /**
- * Lista todos os produtos com informações da imagem principal e total de imagens.
+ * Lista os produtos com informações da imagem principal e total de imagens.
  *
+ * Quando um termo de pesquisa é informado, filtra por nome ou descrição sem
+ * diferenciar maiúsculas de minúsculas. O termo é enviado como parâmetro do
+ * PostgreSQL, e os caracteres curinga (% e _) são tratados como texto literal.
+ *
+ * @param {string} [search=''] - Termo de pesquisa opcional.
  * @returns {Promise<Array<object>>} Lista de produtos.
  */
-async function findAll() {
+async function findAll(search = '') {
+  const params = [];
+  let where = '';
+  if (search) {
+    params.push(`%${search.replace(/[\\%_]/g, '\\$&')}%`);
+    where = 'WHERE p.name ILIKE $1 OR p.description ILIKE $1';
+  }
   const { rows } = await db.query(`
     SELECT p.*, i.id AS primary_image_id, i.public_url AS primary_image_url,
            i.original_name AS primary_image_name,
            (SELECT COUNT(*) FROM product_images x WHERE x.product_id = p.id) AS image_count
     FROM products p
     LEFT JOIN product_images i ON i.product_id = p.id AND i.is_primary = TRUE
+    ${where}
     ORDER BY p.created_at DESC
-  `);
+  `, params);
   return rows.map(mapProduct);
 }
 

@@ -78,11 +78,12 @@ async function createProduct(input) {
 }
 
 /**
- * Lista todos os produtos cadastrados.
+ * Lista os produtos cadastrados, opcionalmente filtrados por um termo de pesquisa.
  *
+ * @param {string} [search=''] - Texto pesquisado no nome ou na descrição.
  * @returns {Promise<Array<object>>} Produtos disponíveis.
  */
-async function listProducts() { return productModel.findAll(); }
+async function listProducts(search = '') { return productModel.findAll(String(search ?? '').trim()); }
 
 /**
  * Reprocessa os nomes cadastrados para garantir a padronização de exibição.

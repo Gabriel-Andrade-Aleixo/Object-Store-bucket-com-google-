@@ -9,7 +9,26 @@
   <a class="button primary" href="/products/new">+ Cadastrar produto</a>
 </section>
 
-<% if (!products.length) { %>
+<form action="/products" method="get" role="search" style="margin-top: 30px; display: flex; gap: 12px; align-items: center;">
+  <input
+    type="search"
+    name="q"
+    placeholder="Pesquisar produtos"
+    aria-label="Pesquisar produtos por nome ou descrição"
+    value="<%= search || '' %>"
+  >
+  <button class="button primary" type="submit">Pesquisar</button>
+  <% if (search) { %><a class="button secondary" href="/products">Limpar</a><% } %>
+</form>
+
+<% if (!products.length && search) { %>
+  <section class="empty">
+    <div class="empty-symbol">◇</div>
+    <h2>Nenhum produto encontrado</h2>
+    <p>Não há produtos com “<%= search %>” no nome ou na descrição.</p>
+    <a class="button secondary" href="/products">Ver todos os produtos</a>
+  </section>
+<% } else if (!products.length) { %>
   <section class="empty">
     <div class="empty-symbol">◇</div>
     <h2>Nenhum produto cadastrado</h2>
@@ -19,7 +38,7 @@
 <% } else { %>
   <section class="catalog-heading">
     <div><span class="eyebrow">Vitrine</span><h2><%= products.length %> produto<%= products.length === 1 ? '' : 's' %></h2></div>
-    <p>Selecione um item para visualizar sua galeria completa.</p>
+    <p><% if (search) { %>Resultados para “<%= search %>”.<% } else { %>Selecione um item para visualizar sua galeria completa.<% } %></p>
   </section>
 
   <section class="catalog-grid">
