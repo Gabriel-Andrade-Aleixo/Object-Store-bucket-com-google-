@@ -4,14 +4,15 @@
 const productService = require('../services/productService');
 
 /**
- * Exibe a listagem completa de produtos cadastrados.
+ * Exibe a listagem de produtos, filtrada pelo parâmetro de pesquisa `q` quando informado.
  *
- * @param {import('express').Request} _request
+ * @param {import('express').Request} request
  * @param {import('express').Response} response
  * @returns {Promise<void>}
  */
-async function list(_request, response) {
-  response.render('products/index', { products: await productService.listProducts() });
+async function list(request, response) {
+  const search = String(request.query.q || '').trim();
+  response.render('products/index', { products: await productService.listProducts(search), search });
 }
 
 /**
